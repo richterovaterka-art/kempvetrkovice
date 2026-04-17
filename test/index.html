@@ -84,6 +84,8 @@
     ul.checklist li strong { color: var(--primary-dark); }
 
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    ul.checklist.two-col { column-count: 2; column-gap: 24px; display: block; }
+    ul.checklist.two-col li { break-inside: avoid; }
     .pay-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     .finance-table { width: 100%; border-collapse: collapse; }
@@ -168,6 +170,7 @@
       .camp-grid { grid-template-columns: 1fr; }
       .organizer-grid { grid-template-columns: 1fr; }
       .two-col { grid-template-columns: 1fr; gap: 0; }
+      ul.checklist.two-col { column-count: 1; }
       .about-grid { grid-template-columns: 1fr; }
       .food-grid { grid-template-columns: 1fr; }
       .contact-grid { grid-template-columns: 1fr; }
@@ -594,29 +597,25 @@
   <div class="section">
     <div class="section-header"><span class="emoji">🦮</span><h2>Doporučený seznam věcí – pro pejska</h2></div>
     <div class="section-body">
-      <div class="two-col">
-        <ul class="checklist">
-          <li>Klec nebo přepravka (nutné u psů, co škrábou na dveře)</li>
-          <li>Dečka na postel (pokud pes spí s vámi)</li>
-          <li><strong>Hooodně pamlsků</strong> (různé druhy)</li>
-          <li>Oblíbené přetahovací hračky</li>
-          <li>Misky na vodu, granule a trénink</li>
-          <li>Granule / BARF</li>
-          <li>Postroj</li>
-          <li>Obojek</li>
-          <li>Krátké vodítko (ne flexi)</li>
-          <li>Klikr (pokud používáte)</li>
-        </ul>
-        <ul class="checklist">
-          <li>Náhubek (pokud je nutný)</li>
-          <li><strong>Očkovací průkaz</strong></li>
-          <li>Sáčky na exkrementy</li>
-          <li>Pamlskovník</li>
-          <li>Pinzeta na klíšťata</li>
-          <li>Zapichovací kolík (pokud máte)</li>
-          <li>Svítící obojek na večer</li>
-        </ul>
-      </div>
+      <ul class="checklist two-col">
+        <li>Klec nebo přepravka (nutné u psů, co škrábou na dveře)</li>
+        <li>Dečka na postel (pokud pes spí s vámi)</li>
+        <li><strong>Hooodně pamlsků</strong> (různé druhy)</li>
+        <li>Oblíbené přetahovací hračky</li>
+        <li>Misky na vodu, granule a trénink</li>
+        <li>Granule / BARF</li>
+        <li>Postroj</li>
+        <li>Obojek</li>
+        <li>Krátké vodítko (ne flexi)</li>
+        <li>Klikr (pokud používáte)</li>
+        <li>Náhubek (pokud je nutný)</li>
+        <li><strong>Očkovací průkaz</strong></li>
+        <li>Sáčky na exkrementy</li>
+        <li>Pamlskovník</li>
+        <li>Pinzeta na klíšťata</li>
+        <li>Zapichovací kolík (pokud máte)</li>
+        <li>Svítící obojek na večer</li>
+      </ul>
     </div>
   </div>
 
