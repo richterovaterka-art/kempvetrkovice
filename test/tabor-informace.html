@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informace k táborům – Agility Kemp Větrkovice</title>
+  <style>
+    :root {
+      --primary: #2c7a4b; --primary-dark: #1a4a2e;
+      --accent: #f5a623; --accent-light: #fff8ee;
+      --bg: #fafaf8; --text: #1a1a1a; --muted: #555;
+      --border: #ddd; --section-bg: #eaf4ed;
+      --red: #c0392b; --red-light: #fdf0ee;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Georgia', serif; background: var(--bg); color: var(--text); line-height: 1.8; font-size: 16px; }
+
+    /* HEADER */
+    .header { background: linear-gradient(135deg, #1a4a2e 0%, #2c7a4b 60%, #3da861 100%); color: white; text-align: center; padding: 60px 40px 50px; }
+    .header .icon { font-size: 70px; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.3)); }
+    .header h1 { font-size: 2.6em; font-weight: bold; margin-bottom: 10px; text-shadow: 0 2px 6px rgba(0,0,0,.3); }
+    .header p { font-size: 1.15em; opacity: .88; font-style: italic; }
+
+    /* CONTAINER */
+    .container { max-width: 880px; margin: 0 auto; padding: 40px 24px 80px; }
+
+    /* SECTION */
+    .section { background: white; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 28px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
+    .section-header { background: var(--section-bg); padding: 18px 28px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #c8e6d4; }
+    .section-header .emoji { font-size: 1.6em; }
+    .section-header h2 { font-size: 1.2em; color: var(--primary-dark); font-weight: bold; }
+    .section-header .camp-dates { font-size: 0.88em; color: var(--muted); margin-left: auto; white-space: nowrap; }
+    .section-body { padding: 24px 28px; }
+
+    /* CAMP DIVIDER */
+    .camps-label {
+      font-size: 0.78em; text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted); text-align: center; padding: 6px 0 18px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .camps-label::before, .camps-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* CAMP DETAIL GRID */
+    .camp-grid { display: grid; grid-template-columns: 1fr 270px; gap: 20px; align-items: start; }
+    @media (max-width: 680px) { .camp-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 680px) { .organizer-grid { grid-template-columns: 1fr !important; } }
+
+    .camp-info-row { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: .94em; line-height: 1.5; align-items: flex-start; }
+    .camp-info-row:last-child { border-bottom: none; }
+    .camp-info-row .cil { font-size: .78em; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; min-width: 76px; padding-top: 3px; flex-shrink: 0; }
+    .camp-info-row a { color: var(--primary); }
+
+    .camp-pay { background: #f0faf4; border: 1px solid #c8e6d4; border-radius: 12px; padding: 16px 18px; }
+    .camp-price-line { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #d4edda; font-size: .93em; gap: 8px; }
+    .camp-price-line:last-of-type { border-bottom: none; }
+    .camp-price-line .cpl { color: var(--muted); }
+    .camp-price-line .cpv { font-weight: bold; color: var(--primary-dark); white-space: nowrap; }
+    .camp-divider { border: none; border-top: 2px dashed #c8e6d4; margin: 12px 0; }
+    .vs-block { margin-bottom: 10px; }
+    .vs-block:last-child { margin-bottom: 0; }
+    .vs-block .vsl { font-size: .76em; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; display: block; margin-bottom: 3px; }
+    .vs-block .vsc { font-family: monospace; font-size: 1.1em; font-weight: bold; color: var(--primary-dark); background: white; border: 1px solid #c8e6d4; border-radius: 6px; padding: 2px 10px; display: inline-block; }
+    .vs-block .vsd { font-size: .82em; color: var(--muted); display: block; margin-top: 2px; }
+
+    /* OVERVIEW CARDS */
+    .event-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 12px; display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; align-items: start; background: white; }
+    .event-card.full { opacity: .58; background: #f8f8f8; }
+    .badge { font-size: .74em; font-weight: bold; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+    .badge-agility { background: #dbeafe; color: #1d4ed8; }
+    .badge-hoopers { background: #fce7f3; color: #9d174d; }
+    .badge-mix { background: #d1fae5; color: #065f46; }
+    .badge-full { background: #fee2e2; color: #991b1b; }
+    .event-title { font-size: .97em; font-weight: bold; color: var(--primary-dark); margin-bottom: 3px; }
+    .event-meta { font-size: .86em; color: var(--muted); display: flex; flex-wrap: wrap; gap: 8px; margin-top: 3px; align-items: center; }
+    .event-price { font-size: .97em; font-weight: bold; color: var(--primary); text-align: right; white-space: nowrap; }
+    .event-spots { font-size: .8em; color: var(--muted); text-align: right; }
+    .event-link { display: inline-block; margin-top: 6px; font-size: .8em; color: var(--primary); text-decoration: none; font-weight: bold; border: 1px solid #c8e6d4; border-radius: 20px; padding: 1px 11px; background: #f0faf4; }
+    .event-link:hover { background: var(--section-bg); }
+
+    /* STANDARD ELEMENTS */
+    ul.checklist { list-style: none; padding: 0; }
+    ul.checklist li { padding: 7px 0 7px 28px; position: relative; border-bottom: 1px solid #f0f0f0; line-height: 1.6; }
+    ul.checklist li:last-child { border-bottom: none; }
+    ul.checklist li::before { content: '•'; position: absolute; left: 7px; color: var(--primary); font-size: 1.3em; line-height: 1.4; }
+    ul.checklist li strong { color: var(--primary-dark); }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } .header h1 { font-size: 1.8em; } }
+
+    .finance-table { width: 100%; border-collapse: collapse; }
+    .finance-table tr { border-bottom: 1px solid #f0f0f0; }
+    .finance-table tr:last-child { border-bottom: none; }
+    .finance-table td { padding: 8px 6px; vertical-align: top; }
+    .finance-table td:first-child { color: var(--muted); font-size: .94em; width: 68%; padding-right: 14px; }
+    .finance-table td:last-child { font-weight: bold; color: var(--primary-dark); white-space: nowrap; text-align: right; }
+
+    .warning-box { background: var(--red-light); border-left: 4px solid var(--red); border-radius: 8px; padding: 13px 17px; margin-bottom: 12px; color: #7a1a10; font-size: .94em; line-height: 1.6; }
+    .warning-box strong { color: var(--red); }
+    .info-box { background: var(--accent-light); border-left: 4px solid var(--accent); border-radius: 8px; padding: 13px 17px; margin-bottom: 12px; color: #5a3e00; font-size: .94em; line-height: 1.6; }
+
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    @media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-item { display: flex; align-items: flex-start; gap: 12px; background: var(--section-bg); border-radius: 10px; padding: 12px 14px; font-size: .94em; }
+    .about-item .ai { font-size: 1.35em; flex-shrink: 0; }
+    .about-item p { color: var(--text); line-height: 1.5; }
+    .about-desc { font-size: 1em; color: var(--muted); line-height: 1.8; margin-bottom: 4px; }
+
+    .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media (max-width: 600px) { .food-grid { grid-template-columns: 1fr; } }
+    .food-item { background: var(--section-bg); border-radius: 10px; padding: 14px 16px; font-size: .94em; }
+    .food-item .label { font-size: .78em; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+    .food-item .value { font-weight: bold; color: var(--primary-dark); }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-item { display: flex; align-items: center; gap: 12px; background: var(--section-bg); border-radius: 10px; padding: 14px 16px; }
+    .contact-item .ci-icon { font-size: 1.5em; flex-shrink: 0; }
+    .contact-item .ci-label { font-size: .76em; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 2px; }
+    .contact-item .ci-value { font-size: .94em; color: var(--text); font-weight: bold; word-break: break-all; }
+
+    .address-card { background: var(--section-bg); border-radius: 12px; padding: 22px 26px; display: flex; gap: 18px; align-items: flex-start; }
+    .address-card .map-icon { font-size: 2.4em; flex-shrink: 0; }
+    .address-card h3 { font-size: 1.05em; color: var(--primary-dark); margin-bottom: 5px; }
+    .address-card p { color: var(--muted); font-size: .93em; margin-bottom: 3px; }
+    .coords { font-family: monospace; font-size: .88em; color: var(--primary); background: white; border: 1px solid #c8e6d4; border-radius: 6px; padding: 3px 10px; display: inline-block; margin-top: 7px; }
+
+    /* PAYMENT SUMMARY TABLE */
+    .pay-table { width: 100%; border-collapse: collapse; font-size: .9em; margin-top: 6px; }
+    .pay-table th { background: var(--section-bg); color: var(--primary-dark); padding: 8px 10px; text-align: left; font-size: .78em; text-transform: uppercase; letter-spacing: .04em; border-bottom: 2px solid #c8e6d4; }
+    .pay-table td { padding: 9px 10px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; font-size: .92em; }
+    .pay-table tr:last-child td { border-bottom: none; }
+    .vs-chip { font-family: monospace; font-weight: bold; color: var(--primary-dark); background: #eaf4ed; border: 1px solid #c8e6d4; border-radius: 4px; padding: 1px 7px; white-space: nowrap; }
+    .vs-note { font-size: .82em; color: var(--muted); }
+
+    .payment-box { background: #f0faf4; border: 1px solid #c8e6d4; border-radius: 12px; padding: 18px 22px; margin-bottom: 14px; }
+    .payment-box h3 { font-size: .97em; color: var(--primary-dark); margin-bottom: 10px; }
+    .payment-box table { width: 100%; border-collapse: collapse; font-size: .94em; }
+    .payment-box td { padding: 5px 6px; vertical-align: top; }
+    .payment-box td:first-child { color: var(--muted); width: 40%; }
+    .payment-box td:last-child { font-weight: bold; color: var(--text); font-family: monospace; }
+
+    .note { color: var(--muted); font-style: italic; font-size: .88em; margin-top: 7px; }
+    .heart-note { text-align: center; padding: 20px; color: var(--muted); font-style: italic; font-size: .94em; }
+    .heart-note span { color: #e74c3c; }
+
+    /* EXPANDABLE DETAILS */
+    details.camp-expand { grid-column: 1 / -1; border-top: 1px solid #eee; margin-top: 6px; padding-top: 4px; }
+    details.camp-expand summary { cursor: pointer; list-style: none; font-size: .84em; font-weight: bold; color: var(--primary); padding: 5px 2px; display: inline-flex; align-items: center; gap: 6px; user-select: none; border-radius: 4px; }
+    details.camp-expand summary::-webkit-details-marker { display: none; }
+    details.camp-expand summary::marker { display: none; }
+    .det-arrow { display: inline-block; font-style: normal; transition: transform .18s; font-size: .9em; }
+    details[open].camp-expand .det-arrow { transform: rotate(90deg); }
+    .camp-expand-body { padding-top: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="icon">🏕️</div>
+  <h1>Informace k táborům 2026</h1>
+  <p>Agility Kemp Větrkovice – vše, co potřebujete vědět</p>
+</div>
+
+<div class="container">
+
+  <!-- O KEMPU -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🌿</span><h2>O kempu</h2></div>
+    <div class="section-body">
+      <p class="about-desc">Sportovní kemp v srdci přírody se nachází v krásné krajině Oderských vrchů, mezi obcemi Březová a Větrkovice, 18 km od Opavy. Okolí je protkáno sítí cyklotras k přírodním zajímavostem a historickým památkám.</p>
+      <div class="about-grid">
+        <div class="about-item"><span class="ai">🏠</span><p>21 malých chatek + 2 velké chatky</p></div>
+        <div class="about-item"><span class="ai">🚿</span><p>V hlavní budově WC, nové sprchy, jídelna a plně vybavená kuchyně</p></div>
+        <div class="about-item"><span class="ai">🐾</span><p>Jedna sada agility překážek dle FCI</p></div>
+        <div class="about-item"><span class="ai">🎣</span><p>Rybník v sousedství areálu</p></div>
+        <div class="about-item"><span class="ai">🚴</span><p>Síť cyklotras v okolí</p></div>
+        <div class="about-item"><span class="ai">📅</span><p>Přijímáme rezervace na rok 2026/27</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PŘEHLED TÁBORŮ -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🗓️</span><h2>Přehled táborů 2026</h2></div>
+    <div class="section-body">
+
+      <!-- VIP CAMP -->
+      <div class="event-card" id="camp-vip">
+        <div>
+          <div class="event-title">Tradiční Mini VIP Camp s Terkou</div>
+          <div class="event-meta"><span>📅 14.–17. 5. 2026 (Čt–Ne)</span><span class="badge badge-mix">Mix sportů</span></div>
+        </div>
+        <div>
+          <div class="event-price">Individuální cena</div>
+          <div class="event-spots">12 z 13 míst obsazeno</div>
+        </div>
+        <details class="camp-expand">
+          <summary><span class="det-arrow">▶</span> Detaily</summary>
+          <div class="camp-expand-body">
+            <div class="camp-grid">
+              <div>
+                <div class="camp-info-row"><span class="cil">Trenér</span><span>🇨🇿 Tereza Richterová – agility, hoopers nebo kombinace; možnost tréninku poslušnosti</span></div>
+                <div class="camp-info-row"><span class="cil">Program</span><span><strong>2–5 tréninků</strong> za pobyt – počet je na vás · max. <strong>13 týmů</strong> · táboráky dle počasí</span></div>
+                <div class="camp-info-row"><span class="cil">Přihlášky</span><span><a href="https://dreamdogs.dogres.cz/trainings" target="_blank">Dogres – dreamdogs.dogres.cz/trainings</a></span></div>
+              </div>
+              <div class="camp-pay">
+                <div class="camp-price-line"><span class="cpl">2× trénink</span><span class="cpv">1 300 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">3× trénink</span><span class="cpv">1 900 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">4× trénink</span><span class="cpv">2 500 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">5× trénink</span><span class="cpv">2 900 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Necvičící doprovod</span><span class="cpv">500 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Neběhající pes</span><span class="cpv">zdarma</span></div>
+                <hr class="camp-divider">
+                <div class="vs-block">
+                  <span class="vsl">VS výcvik · do 15. 1. 2026</span>
+                  <span class="vsc">14175</span>
+                  <span class="vsd">VS z Dogresu ignorujte</span>
+                </div>
+                <div class="vs-block">
+                  <span class="vsl">VS ubytování · do 15. 3. 2026</span>
+                  <span class="vsc">14175</span>
+                </div>
+              </div>
+            </div>
+            <div class="info-box" style="margin-top:12px;">V ceně: výcvik + pronájem areálu + pronájem kuchyně. Veškeré informace sledujte ve <strong>FB události</strong>.</div>
+          </div>
+        </details>
+      </div>
+
+      <!-- PLNO -->
+      <div class="event-card full">
+        <div>
+          <div class="event-title">Agility camp s Terkou 2026</div>
+          <div class="event-meta"><span>📅 28.–31. 5. 2026 (Čt–Ne)</span><span class="badge badge-agility">Agility</span><span class="badge badge-full">PLNO</span></div>
+        </div>
+        <div><div class="event-price">–</div><div class="event-spots">Bez přihlašování</div></div>
+      </div>
+
+      <div class="event-card full">
+        <div>
+          <div class="event-title">Hoopers camp s Terkou a Mončou</div>
+          <div class="event-meta"><span>📅 18.–21. 6. 2026 (Čt–Ne)</span><span class="badge badge-hoopers">Hoopers</span><span class="badge badge-full">PLNO</span></div>
+        </div>
+        <div><div class="event-price">–</div><div class="event-spots">Bez přihlašování</div></div>
+      </div>
+
+      <!-- AGILITY + NINA -->
+      <div class="event-card" id="camp-nina">
+        <div>
+          <div class="event-title">Agility camp s Terkou a Ninou</div>
+          <div class="event-meta"><span>📅 2.–5. 7. 2026 (Čt–Ne)</span><span class="badge badge-agility">Agility</span></div>
+        </div>
+        <div><div class="event-price">2 900 Kč / psa</div><div class="event-spots">11 z 18 míst obsazeno</div></div>
+        <details class="camp-expand">
+          <summary><span class="det-arrow">▶</span> Detaily</summary>
+          <div class="camp-expand-body">
+            <div class="camp-grid">
+              <div>
+                <div class="camp-info-row"><span class="cil">Trenérky</span><span>🇨🇿 Tereza Richterová – agility<br>🇸🇰 Nina Dúcka – agility · <em>II. vicemistryně Slovenska 2024</em></span></div>
+                <div class="camp-info-row"><span class="cil">Program</span><span><strong>6 tréninků</strong> – Čt 1 · Pá 2 · So 1–2 · Ne 1–2 · táboráky dle počasí</span></div>
+                <div class="camp-info-row"><span class="cil">Kapacita</span><span>Max. <strong>18 týmů</strong> · začátečníci i pokročilí</span></div>
+                <div class="camp-info-row"><span class="cil">Přihlášky</span><span><a href="https://dreamdogs.dogres.cz/trainings" target="_blank">Dogres – dreamdogs.dogres.cz/trainings</a></span></div>
+              </div>
+              <div class="camp-pay">
+                <div class="camp-price-line"><span class="cpl">Aktivní účastník</span><span class="cpv">2 900 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Necvičící doprovod</span><span class="cpv">500 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Neběhající pes</span><span class="cpv">zdarma</span></div>
+                <hr class="camp-divider">
+                <div class="vs-block">
+                  <span class="vsl">VS výcvik · do 15. 2. 2026</span>
+                  <span class="vsc">020526</span>
+                  <span class="vsd">VS z Dogresu ignorujte</span>
+                </div>
+                <div class="vs-block">
+                  <span class="vsl">VS ubytování · do 15. 5. 2026</span>
+                  <span class="vsc">020526</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- DREAM DOGS -->
+      <div class="event-card" id="camp-dream">
+        <div>
+          <div class="event-title">Dream dogs camp 2026</div>
+          <div class="event-meta"><span>📅 3.–6. 8. 2026 (Po–Čt)</span><span class="badge badge-mix">Mix sportů</span></div>
+        </div>
+        <div><div class="event-price">2 900 Kč / psa</div><div class="event-spots">24 z 30 míst obsazeno</div></div>
+        <details class="camp-expand">
+          <summary><span class="det-arrow">▶</span> Detaily</summary>
+          <div class="camp-expand-body">
+            <div class="info-box" style="margin-bottom:12px;">✨ <strong>NOVINKA:</strong> Vyplněné přihlášky nemusí být automaticky přijaty. Potvrzením účasti je <strong>přidání do messengerové skupiny</strong>. Přihlášky: <a href="https://forms.gle/QnuTxBNwbLVRwY6x8" target="_blank">forms.gle/QnuTxBNwbLVRwY6x8</a></div>
+            <div class="camp-grid">
+              <div>
+                <div class="camp-info-row"><span class="cil">Trenérky</span><span>
+                  🇨🇿 Tereza Richterová – agility / hoopers<br>
+                  🇨🇿 Hana Kolková – provozní poslušnost / rally<br>
+                  🇨🇿 Amálie Prosková – dogpuller / nosework<br>
+                  🇨🇿 Zuzana Bergerová – hoopers<br>
+                  <em style="font-size:.88em;color:var(--muted);">Každý účastník má min. 1 trénink u každé trenérky.</em>
+                </span></div>
+                <div class="camp-info-row"><span class="cil">Program</span><span><strong>6 tréninků</strong> – Po 1 · Út 2 · St 2 · Čt 1 · táboráky dle počasí</span></div>
+                <div class="camp-info-row"><span class="cil">Kapacita</span><span>Max. <strong>30 týmů</strong> · začátečníci i pokročilí</span></div>
+              </div>
+              <div class="camp-pay">
+                <div class="camp-price-line"><span class="cpl">Aktivní účastník</span><span class="cpv">2 900 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">2. pes stejného psovoda</span><span class="cpv">2 600 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Necvičící doprovod</span><span class="cpv">500 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Neběhající pes</span><span class="cpv">zdarma</span></div>
+                <hr class="camp-divider">
+                <div class="vs-block">
+                  <span class="vsl">VS výcvik · do 15. 3. 2026</span>
+                  <span class="vsc">030626</span>
+                </div>
+                <div class="vs-block">
+                  <span class="vsl">VS ubytování · do 15. 5. 2026</span>
+                  <span class="vsc">030626</span>
+                </div>
+              </div>
+            </div>
+            <p class="note" style="margin-top:8px;">V ceně: výcvik u 4 trenérek + pronájem areálu + pronájem kuchyně.</p>
+          </div>
+        </details>
+      </div>
+
+      <!-- HOOPERS 4 TRAINERS -->
+      <div class="event-card" id="camp-hoopers">
+        <div>
+          <div class="event-title">HOOPERS Camp CZ – 4 Trainers</div>
+          <div class="event-meta"><span>📅 6.–9. 8. 2026 (Čt–Ne)</span><span class="badge badge-hoopers">Hoopers</span></div>
+        </div>
+        <div><div class="event-price">3 900 Kč / psa</div><div class="event-spots">25 z 30 míst obsazeno</div></div>
+        <details class="camp-expand">
+          <summary><span class="det-arrow">▶</span> Detaily</summary>
+          <div class="camp-expand-body">
+            <div class="camp-grid">
+              <div>
+                <div class="camp-info-row"><span class="cil">Trenérky</span><span>
+                  🇨🇿 Markéta Benediktová – hoopers · rozhodčí<br>
+                  🇨🇿 Dorotka Anderlová – hoopers · rozhodčí<br>
+                  🇨🇿 Evža Schreiber – hoopers · rozhodčí<br>
+                  🇨🇿 Terka Richterová – hoopers · rozhodčí<br>
+                  <em style="font-size:.88em;color:var(--muted);">U každé trenérky min. 1 trénink.</em>
+                </span></div>
+                <div class="camp-info-row"><span class="cil">Program</span><span><strong>5 tréninků</strong> – Čt 1 · Pá 2 · So 2 · + <strong>závody v ceně</strong> (2× zkouška + open, nepovinné)</span></div>
+                <div class="camp-info-row"><span class="cil">Kapacita</span><span>Max. <strong>30 týmů</strong> · začátečníci i pokročilí</span></div>
+                <div class="camp-info-row"><span class="cil">Přihlášky</span><span><a href="https://dreamdogs.dogres.cz/trainings" target="_blank">Dogres – dreamdogs.dogres.cz/trainings</a></span></div>
+              </div>
+              <div class="camp-pay">
+                <div class="camp-price-line"><span class="cpl">Aktivní účastník</span><span class="cpv">3 900 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Necvičící doprovod</span><span class="cpv">500 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Neběhající pes</span><span class="cpv">zdarma</span></div>
+                <hr class="camp-divider">
+                <div class="vs-block">
+                  <span class="vsl">VS výcvik · do 15. 3. 2026</span>
+                  <span class="vsc" style="background:#fff8ee;border-color:#f5a623;color:#7a4a00;">z Dogresu ⚠️</span>
+                  <span class="vsd">Použijte VS z e-mailu po přihlášení – jinak se platba nespáruje!</span>
+                </div>
+                <div class="vs-block">
+                  <span class="vsl">VS ubytování · do 15. 5. 2026</span>
+                  <span class="vsc">060926</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- POHODA CAMP -->
+      <div class="event-card" id="camp-pohoda">
+        <div>
+          <div class="event-title">Pohoda camp!</div>
+          <div class="event-meta"><span>📅 24.–27. 8. 2026 (Po–Čt)</span><span class="badge badge-mix">Mix sportů</span></div>
+        </div>
+        <div><div class="event-price">od 2 000 Kč / psa</div><div class="event-spots">8 z 20 míst obsazeno</div></div>
+        <details class="camp-expand">
+          <summary><span class="det-arrow">▶</span> Detaily</summary>
+          <div class="camp-expand-body">
+            <div class="info-box" style="margin-bottom:12px;">🌿 Čtyři dny bez stresu, bez výkonového tlaku – konec léta v pohodovém duchu. Pro <strong>všechny věkové kategorie</strong> psů i lidí. Min. věk štěňátek: 5 měsíců.</div>
+            <div class="camp-grid">
+              <div>
+                <div class="camp-info-row"><span class="cil">Organizátor</span><span>🇨🇿 Tereza Richterová</span></div>
+                <div class="camp-info-row"><span class="cil">Program</span><span>
+                  🐕 Psí soutěže – sranda hry, přivolávačky, triky, týmové výzvy<br>
+                  🧍 Lidské soutěže & večerní programy – kvízy, hry, chill<br>
+                  🏕️ Táboráky dle počasí · 🎁 ceny pro výherce + dárky pro účastníky
+                </span></div>
+                <div class="camp-info-row"><span class="cil">Kapacita</span><span>Max. <strong>20 týmů</strong> · kategorie: štěňata / dospělí / senioři</span></div>
+                <div class="camp-info-row"><span class="cil">Přihlášky</span><span><a href="https://dreamdogs.dogres.cz/trainings" target="_blank">Dogres – dreamdogs.dogres.cz/trainings</a></span></div>
+              </div>
+              <div class="camp-pay">
+                <div class="camp-price-line"><span class="cpl">Hlavní účastník (1. pes)</span><span class="cpv">2 000 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">2. pes stejného psovoda</span><span class="cpv">1 000 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Necvičící doprovod</span><span class="cpv">500 Kč</span></div>
+                <hr class="camp-divider">
+                <div class="vs-block">
+                  <span class="vsl">VS výcvik · do 15. 2. 2026</span>
+                  <span class="vsc">333333</span>
+                  <span class="vsd">VS z Dogresu ignorujte</span>
+                </div>
+                <div class="vs-block">
+                  <span class="vsl">VS ubytování · do 15. 5. 2026</span>
+                  <span class="vsc">020526</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ZAKONČENÍ PRÁZDNIN -->
+      <div class="event-card" id="camp-konec">
+        <div>
+          <div class="event-title">Agility/hoopers zakončení prázdnin s Terkou</div>
+          <div class="event-meta"><span>📅 28.–30. 8. 2026 (Pá–Ne)</span><span class="badge badge-mix">Mix sportů</span></div>
+        </div>
+        <div><div class="event-price">2 700 Kč / psa</div><div class="event-spots">6 z 14 míst obsazeno</div></div>
+        <details class="camp-expand">
+          <summary><span class="det-arrow">▶</span> Detaily</summary>
+          <div class="camp-expand-body">
+            <div class="camp-grid">
+              <div>
+                <div class="camp-info-row"><span class="cil">Trenér</span><span>🇨🇿 Tereza Richterová – agility nebo hoopers, případně kombinace</span></div>
+                <div class="camp-info-row"><span class="cil">Program</span><span><strong>4 tréninky</strong> – Pá 2 · So 1 · Ne 1 · táboráky dle počasí</span></div>
+                <div class="camp-info-row"><span class="cil">Kapacita</span><span>Max. <strong>14 týmů</strong> · vhodné pro <strong>pokročilejší týmy</strong></span></div>
+                <div class="camp-info-row"><span class="cil">Přihlášky</span><span><a href="https://dreamdogs.dogres.cz/trainings" target="_blank">Dogres – dreamdogs.dogres.cz/trainings</a></span></div>
+              </div>
+              <div class="camp-pay">
+                <div class="camp-price-line"><span class="cpl">Aktivní účastník</span><span class="cpv">2 700 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Necvičící doprovod</span><span class="cpv">500 Kč</span></div>
+                <div class="camp-price-line"><span class="cpl">Neběhající pes</span><span class="cpv">zdarma</span></div>
+                <hr class="camp-divider">
+                <div class="vs-block">
+                  <span class="vsl">VS výcvik · do 15. 3. 2026</span>
+                  <span class="vsc">28308</span>
+                </div>
+                <div class="vs-block">
+                  <span class="vsl">VS ubytování · do 15. 5. 2026</span>
+                  <span class="vsc">28308</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── SDÍLENÉ INFORMACE ─── -->
+  <div class="camps-label">Společné informace pro všechny tábory</div>
+
+  <!-- PLATBA -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">💳</span><h2>Platba – čísla účtů</h2></div>
+    <div class="section-body">
+      <div class="payment-box">
+        <h3>💳 Výcvik + doprovod</h3>
+        <table>
+          <tr><td>Číslo účtu</td><td>123-7338290297/0100</td></tr>
+          <tr><td>IBAN</td><td>CZ61 0100 0001 2373 3829 0297</td></tr>
+          <tr><td>VS</td><td>viz sekce každého táboru výše</td></tr>
+        </table>
+      </div>
+      <div class="payment-box">
+        <h3>🏠 Ubytování</h3>
+        <table>
+          <tr><td>Číslo účtu</td><td>1280810001/5500</td></tr>
+          <tr><td>VS</td><td>viz sekce každého táboru výše</td></tr>
+        </table>
+        <p style="font-size:.88em;color:var(--muted);margin-top:8px;">Sdílíte-li chatku, uveďte to v přihlášce – cena se rozdělí. Ceny ubytování jsou orientační.</p>
+      </div>
+      <div class="info-box">📞 Kontakt pro platby: <strong>Amálie Prosková</strong> – <strong>605 067 904</strong> – <strong>ami.kempy@seznam.cz</strong></div>
+
+      <p style="font-size:.92em;color:var(--primary-dark);font-weight:bold;margin:18px 0 8px;">Přehled VS a termínů splatnosti</p>
+      <table class="pay-table">
+        <thead>
+          <tr>
+            <th>Tábor</th>
+            <th>VS výcvik</th>
+            <th>Výcvik do</th>
+            <th>VS ubyt.</th>
+            <th>Ubyt. do</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>VIP Camp 14.5.</td><td><span class="vs-chip">14175</span></td><td class="vs-note">15. 1. 2026</td><td><span class="vs-chip">14175</span></td><td class="vs-note">15. 3. 2026</td></tr>
+          <tr><td>Agility+Nina 2.7.</td><td><span class="vs-chip">020526</span></td><td class="vs-note">15. 2. 2026</td><td><span class="vs-chip">020526</span></td><td class="vs-note">15. 5. 2026</td></tr>
+          <tr><td>Dream dogs 3.8.</td><td><span class="vs-chip">030626</span></td><td class="vs-note">15. 3. 2026</td><td><span class="vs-chip">030626</span></td><td class="vs-note">15. 5. 2026</td></tr>
+          <tr><td>Hoopers 4T 6.8.</td><td><span class="vs-chip" style="background:#fff8ee;border-color:#f5a623;color:#7a4a00;">z Dogresu ⚠️</span></td><td class="vs-note">15. 3. 2026</td><td><span class="vs-chip">060926</span></td><td class="vs-note">15. 5. 2026</td></tr>
+          <tr><td>Pohoda camp 24.8.</td><td><span class="vs-chip">333333</span></td><td class="vs-note">15. 2. 2026</td><td><span class="vs-chip">020526</span></td><td class="vs-note">15. 5. 2026</td></tr>
+          <tr><td>Zakončení 28.8.</td><td><span class="vs-chip">28308</span></td><td class="vs-note">15. 3. 2026</td><td><span class="vs-chip">28308</span></td><td class="vs-note">15. 5. 2026</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Kdo se přihlásí po termínu, posílá platbu co nejdříve. Individuální domluva je možná.</p>
+    </div>
+  </div>
+
+  <!-- STORNO -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🛑</span><h2>Storno podmínky</h2></div>
+    <div class="section-body">
+      <div class="warning-box">
+        <strong>Platí pro všechny tábory: peníze se vrací POUZE při nalezení náhradníka.</strong><br>
+        Neúčast = povinnost najít náhradníka nebo uhradit plnou částku. Bez výjimek – potvrzujete v přihlášce.
+      </div>
+      <ul class="checklist">
+        <li>V případě nemoci nebo jiné překážky je vaší odpovědností zajistit náhradníka</li>
+        <li>Termíny splatnosti viz přehledová tabulka výše</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SEZNAM VĚCÍ PRO VÁS -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🎒</span><h2>Doporučený seznam věcí – pro vás</h2></div>
+    <div class="section-body">
+      <ul class="checklist">
+        <li><strong>Pes</strong> (ano, opravdu ho nezapomeňte!)</li>
+        <li>Opalovací krém</li>
+        <li>Repelent</li>
+        <li>Základní léky</li>
+        <li><strong>Pláštěnky!</strong></li>
+        <li>Plavky (možnost koupání v rybníce)</li>
+        <li>Kšiltovka nebo klobouk</li>
+        <li><strong>Židlička na sezení u parkuru</strong> (nebo deka)</li>
+        <li>Teplé oblečení na večer</li>
+        <li>Dostatek oblečení pro každodenní potřebu</li>
+        <li><strong>Kartička pojištěnce + občanka / pas</strong> (nutno předložit na recepci při příjezdu)</li>
+        <li>Propiska a bloček na poznámky</li>
+        <li><strong>Vlastní lůžkoviny</strong> (spacák/peřina; v chatce je malý polštář)</li>
+        <li>Nabíječka na telefon (v chatce je 1 zásuvka)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SEZNAM VĚCÍ PRO PEJSKA -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🦮</span><h2>Doporučený seznam věcí – pro pejska</h2></div>
+    <div class="section-body">
+      <div class="two-col">
+        <ul class="checklist">
+          <li>Klec nebo přepravka (nutné u psů, co škrábou na dveře)</li>
+          <li>Dečka na postel (pokud pes spí s vámi)</li>
+          <li><strong>Hooodně pamlsků</strong> (různé druhy)</li>
+          <li>Oblíbené přetahovací hračky</li>
+          <li>Misky na vodu, granule a trénink</li>
+          <li>Granule / BARF</li>
+          <li>Postroj</li>
+          <li>Obojek</li>
+          <li>Krátké vodítko (ne flexi)</li>
+          <li>Klikr (pokud používáte)</li>
+        </ul>
+        <ul class="checklist">
+          <li>Náhubek (pokud je nutný)</li>
+          <li><strong>Očkovací průkaz</strong></li>
+          <li>Sáčky na exkrementy</li>
+          <li>Pamlskovník</li>
+          <li>Pinzeta na klíšťata</li>
+          <li>Zapichovací kolík (pokud máte)</li>
+          <li>Svítící obojek na večer</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- UBYTOVÁNÍ -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🛖</span><h2>Ubytování – ceny</h2></div>
+    <div class="section-body">
+      <table class="finance-table">
+        <tr><td><strong>Malá chatka</strong> (až 4 osoby)</td><td><strong>650 Kč / noc</strong></td></tr>
+        <tr><td><strong>Velká chatka</strong> (až 6 osob)</td><td><strong>1 100 Kč / noc</strong></td></tr>
+        <tr><td>Ubytování ve vlastním autě</td><td>500 Kč / noc</td></tr>
+        <tr><td>Zapůjčení přímotopu</td><td>100 Kč / den + energie</td></tr>
+        <tr><td>Energie nad rámec ubytování (přímotop, elektrokola…)<br><span style="font-size:.88em;color:#888;">1 kW zdarma v ceně ubytování</span></td><td>12 Kč / kW</td></tr>
+        <tr><td>Zapůjčení topidla do sálu</td><td>600 Kč / PB láhev / kus</td></tr>
+      </table>
+      <div class="warning-box" style="margin-top:16px;">
+        <strong>Kauce za chatku: 500 Kč</strong> – vybírá se při příjezdu. Vrací se při předání v den odjezdu, pokud je chatka uklizená a nepoškozená. Pokud ne, kauce propadá.<br>
+        <strong>Karavany a vlastní stany nejsou možné.</strong>
+      </div>
+      <p class="note">Ceny jsou orientační a po novém roce se mohou nepatrně změnit. Kompletní ceník areálu: <a href="https://www.kempvetrkovice.com" target="_blank">kempvetrkovice.com</a></p>
+    </div>
+  </div>
+
+  <!-- POPLATKY -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">💰</span><h2>Poplatky obci / kempu</h2></div>
+    <div class="section-body">
+      <table class="finance-table">
+        <tr><td>Neubytovaní hosté – jednorázový vstup (včetně dětí)</td><td>100 Kč</td></tr>
+        <tr><td>Neubytovaní hosté – dojíždí pouze na tréninky</td><td>300 Kč / den</td></tr>
+        <tr><td>Poplatek za psa</td><td>15 Kč / noc</td></tr>
+        <tr><td>Rekreační poplatek</td><td>17 Kč / noc</td></tr>
+        <tr><td>Osobní auto – povolení k vjezdu (neubytovaní nebo doprovod)</td><td>20 Kč</td></tr>
+        <tr><td>Osobní auto – parkovné</td><td>50 Kč</td></tr>
+        <tr><td>Využití kuchyně – pro odběratele jídla z kempu</td><td>100 Kč / pobyt / os.</td></tr>
+        <tr><td>Využití kuchyně – bez objednané stravy</td><td>200 Kč / pobyt / os.</td></tr>
+      </table>
+      <div class="warning-box" style="margin-top:14px;"><strong>V kempu NELZE platit kartou.</strong> Poplatky obci i jídlo platíte v hotovosti na místě. Ceny jsou včetně DPH.</div>
+    </div>
+  </div>
+
+  <!-- DALŠÍ VÝDAJE -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">💷</span><h2>Případně další výdaje</h2></div>
+    <div class="section-body">
+      <table class="finance-table">
+        <tr><td>Plná penze (pokud objednána) – cena bude upřesněna cca měsíc před táborem</td><td>dle objednávky</td></tr>
+        <tr><td>Bufet – vody, káva, domácí limonády, nanuky, sladkosti, chipsy…</td><td>dle výběru</td></tr>
+        <tr><td>Obchůdek – hračky, pamlsky, doplňky stravy, svíčky</td><td>dle výběru</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- JÍDLO -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🍔</span><h2>Informace k jídlu</h2></div>
+    <div class="section-body">
+      <div class="food-grid">
+        <div class="food-item"><div class="label">Cena za porci</div><div class="value">bude upřesněna</div></div>
+        <div class="food-item"><div class="label">Program stravování</div><div class="value">Čt večeře → Ne oběd</div></div>
+        <div class="food-item"><div class="label">Plná penze zahrnuje</div><div class="value">snídaně, obědy, večeře</div></div>
+        <div class="food-item"><div class="label">Výběr jídel</div><div class="value">jedna varianta, bez výběru</div></div>
+      </div>
+      <div class="info-box">Neděláme vegetariánskou stravu. Opět vaří moji nejlepší rodiče, takže to bude zase pecka! ❤️</div>
+      <div class="warning-box"><strong>Jídlo lze měnit nejpozději týden před táborem</strong> – poté žádné změny nebudou akceptovány. Vše se nakupuje na přesný počet porcí!</div>
+    </div>
+  </div>
+
+  <!-- DŮLEŽITÉ INFORMACE -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">ℹ️</span><h2>Důležité informace</h2></div>
+    <div class="section-body">
+      <div class="warning-box"><strong>Kohoutková voda není pitná!</strong> &nbsp;|&nbsp; <strong>Hárající feny NUTNO nahlásit před táborem.</strong></div>
+      <ul class="checklist">
+        <li>Ubytujeme vás až v čas napsaný na programu – nikoliv dříve</li>
+        <li>V den příjezdu pomožte se stavbou parkuru, v průběhu s přestavbou a na konci s úklidem</li>
+        <li>Na tréninky choďte včas – při pozdních příchodech může být trénink zkrácen</li>
+        <li>Nejedná se o dětský tábor – každý odpovídá sám za sebe; nezodpovídáme za škody způsobené psem ani psovodem</li>
+        <li>Cestou do kempu povolení k vjezdu netřeba, cestou zpět ano (dostanete v kempu)</li>
+        <li><strong>Zákaz venčení psů</strong> ve vnitřní (oplocené) části kempu a na parkuru</li>
+        <li><strong>Žádný tým nebude trénovat bez souhlasu trenéra na parkuru sám</strong></li>
+        <li>Mějte pejsky v areálu na vodítku – nechceme žádné konflikty</li>
+        <li>Uklízejte po sobě i po svých pejscích v celém areálu</li>
+        <li>Cokoliv si vytáhnete z kuchyňky, umyjte a vraťte na místo; po jídle uklízejte stoly</li>
+        <li>WC a sprchy se nachází v hlavní budově</li>
+        <li>Buďte ohleduplní k ostatním účastníkům</li>
+        <li>Pokud máte problém, obraťte se na <strong>Terku</strong> nebo majitele kempu (zvoneček na recepci)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ADRESA -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">📍</span><h2>Adresa a příjezd</h2></div>
+    <div class="section-body">
+      <div class="address-card">
+        <div class="map-icon">🗺️</div>
+        <div>
+          <h3>Agility Kemp Větrkovice</h3>
+          <p>Větrkovice 10E</p>
+          <p style="font-size:.88em;color:#888;margin-top:5px;">Při příjezdu musíte jet v obci Březová nebo Větrkovice zákazem vjezdu.</p>
+          <div class="coords">49.7831277N, 17.8455870E</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- O POŘADATELCE -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">🐕‍🦺</span><h2>Hlavní pořadatelka – Tereza Richterová</h2></div>
+    <div class="section-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+        <div>
+          <p style="font-size:.97em;line-height:1.8;color:var(--text);margin-bottom:14px;">
+            Zakladatelka psí školy <strong>Dream Dogs</strong> a certifikovaná trenérka agility, hoopers a poslušnosti s více než <strong>11 lety zkušeností</strong>. Ke každému týmu přistupuje individuálně – trénink šitý na míru, žádné šablony. Věří, že nejlepší výsledky přicházejí, když to všechny baví.
+          </p>
+          <p style="font-size:.97em;line-height:1.8;color:var(--text);margin-bottom:14px;">
+            Má čtyři psy – tři border kolie a jednu šeltii. Nejmladší, borderák <strong>Dream</strong>, závodí v kategorii HCH (šampioni) v hoopers a v A2 v agility.
+          </p>
+          <div class="info-box" style="margin-bottom:0;">
+            🐾 Ročně odtrénuje <strong>více než 1 700 týmů</strong>, má přes <strong>500 absolventů</strong> online kurzů a každý rok pořádá min. <strong>8 táborů</strong> ve Větřkovicích.
+          </div>
+        </div>
+        <div>
+          <p style="font-size:.78em;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px;">Úspěchy & certifikace</p>
+          <ul class="checklist">
+            <li>Rozhodčí pro MČR Hoopers 2026</li>
+            <li><strong>1. vicemistři ČR družstev</strong> BCCCZ v hoopers 2025</li>
+            <li>Titul <strong>MOH – Master of Hoopers Open 2025</strong> s Dreamem</li>
+            <li><strong>Hoopers trenérka roku</strong> pro ČR a SR 2021</li>
+            <li><strong>Nejoblíbenější hoopers trenérka</strong> 2020</li>
+            <li>Certifikovaná trenérka a národní rozhodčí Hoopers od 2020</li>
+            <li>Trenérka agility a základní poslušnosti od 2017</li>
+            <li>Zakladatelka závodů <strong>Dream Cup</strong> – v roce 2025 proběhl 7. ročník</li>
+            <li>Věnuje se také <strong>Dornově metodě</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KONTAKT -->
+  <div class="section">
+    <div class="section-header"><span class="emoji">📬</span><h2>Kontakt</h2></div>
+    <div class="section-body">
+      <div class="contact-grid">
+        <div class="contact-item"><span class="ci-icon">📧</span><div><div class="ci-label">E-mail</div><div class="ci-value">richterovaterka@seznam.cz</div></div></div>
+        <div class="contact-item"><span class="ci-icon">📸</span><div><div class="ci-label">Instagram</div><div class="ci-value">teri_richterova_dogtrainer</div></div></div>
+        <div class="contact-item"><span class="ci-icon">📘</span><div><div class="ci-label">Facebook</div><div class="ci-value">Tereza Richterová</div></div></div>
+        <div class="contact-item"><span class="ci-icon">📞</span><div><div class="ci-label">Platby (Amálie Prosková)</div><div class="ci-value">605 067 904</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="heart-note">Těšíme se na vás a vaše pejsky! <span>❤️</span></div>
+  <div style="text-align:center;font-size:.8em;color:#aaa;padding-bottom:20px;">Poslední aktualizace: 17. 4. 2026</div>
+
+</div>
+</body>
+</html>
