@@ -42,8 +42,7 @@
 
     /* CAMP DETAIL GRID */
     .camp-grid { display: grid; grid-template-columns: 1fr 270px; gap: 20px; align-items: start; }
-    @media (max-width: 680px) { .camp-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 680px) { .organizer-grid { grid-template-columns: 1fr !important; } }
+    .organizer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
 
     .camp-info-row { display: flex; gap: 10px; padding: 7px 0; border-bottom: 1px solid #f0f0f0; font-size: .94em; line-height: 1.5; align-items: flex-start; }
     .camp-info-row:last-child { border-bottom: none; }
@@ -85,7 +84,7 @@
     ul.checklist li strong { color: var(--primary-dark); }
 
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } .header h1 { font-size: 1.8em; } }
+    .pay-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
     .finance-table { width: 100%; border-collapse: collapse; }
     .finance-table tr { border-bottom: 1px solid #f0f0f0; }
@@ -142,6 +141,55 @@
     .note { color: var(--muted); font-style: italic; font-size: .88em; margin-top: 7px; }
     .heart-note { text-align: center; padding: 20px; color: var(--muted); font-style: italic; font-size: .94em; }
     .heart-note span { color: #e74c3c; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 680px) {
+      body { font-size: 15px; }
+
+      /* Header */
+      .header { padding: 36px 20px 28px; }
+      .header .icon { font-size: 50px; margin-bottom: 12px; }
+      .header h1 { font-size: 1.65em; }
+      .header p { font-size: .97em; }
+
+      /* Container + sekce */
+      .container { padding: 18px 12px 60px; }
+      .section { border-radius: 12px; margin-bottom: 16px; }
+      .section-header { padding: 12px 16px; }
+      .section-header h2 { font-size: 1.05em; }
+      .section-body { padding: 16px 16px; }
+
+      /* Event karty – přerovnat na 1 sloupec */
+      .event-card { grid-template-columns: 1fr; gap: 4px; padding: 12px 14px; }
+      .event-price { text-align: left; }
+      .event-spots { text-align: left; }
+
+      /* Camp detail grid */
+      .camp-grid { grid-template-columns: 1fr; }
+      .organizer-grid { grid-template-columns: 1fr; }
+      .two-col { grid-template-columns: 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .food-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; }
+
+      /* Info řádky v detailu */
+      .camp-info-row .cil { min-width: 62px; font-size: .75em; }
+
+      /* Tabulka VS – horizontální scroll */
+      .pay-table { font-size: .82em; min-width: 480px; }
+      .pay-table th, .pay-table td { padding: 7px 7px; }
+
+      /* Platební tabulky */
+      .payment-box td:first-child { width: auto; }
+      .finance-table td:first-child { width: auto; }
+      .finance-table td:last-child { white-space: normal; }
+
+      /* Adresa */
+      .address-card { padding: 16px 16px; }
+
+      /* Pořadatelka – sekce */
+      .section-body > div[style*="grid-template-columns:1fr 1fr"] { grid-template-columns: 1fr !important; }
+    }
 
     /* EXPANDABLE DETAILS */
     details.camp-expand { grid-column: 1 / -1; border-top: 1px solid #eee; margin-top: 6px; padding-top: 4px; }
@@ -475,6 +523,7 @@
       <div class="info-box">📞 Kontakt pro platby: <strong>Amálie Prosková</strong> – <strong>605 067 904</strong> – <strong>ami.kempy@seznam.cz</strong></div>
 
       <p style="font-size:.92em;color:var(--primary-dark);font-weight:bold;margin:18px 0 8px;">Přehled VS a termínů splatnosti</p>
+      <div class="pay-table-wrap">
       <table class="pay-table">
         <thead>
           <tr>
@@ -494,6 +543,7 @@
           <tr><td>Zakončení 28.8.</td><td><span class="vs-chip">28308</span></td><td class="vs-note">15. 3. 2026</td><td><span class="vs-chip">28308</span></td><td class="vs-note">15. 5. 2026</td></tr>
         </tbody>
       </table>
+      </div>
       <p class="note">Kdo se přihlásí po termínu, posílá platbu co nejdříve. Individuální domluva je možná.</p>
     </div>
   </div>
@@ -674,7 +724,7 @@
   <div class="section">
     <div class="section-header"><span class="emoji">🐕‍🦺</span><h2>Hlavní pořadatelka – Tereza Richterová</h2></div>
     <div class="section-body">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+      <div class="organizer-grid">
         <div>
           <p style="font-size:.97em;line-height:1.8;color:var(--text);margin-bottom:14px;">
             Zakladatelka psí školy <strong>Dream Dogs</strong> a certifikovaná trenérka agility, hoopers a poslušnosti s více než <strong>11 lety zkušeností</strong>. Ke každému týmu přistupuje individuálně – trénink šitý na míru, žádné šablony. Věří, že nejlepší výsledky přicházejí, když to všechny baví.
